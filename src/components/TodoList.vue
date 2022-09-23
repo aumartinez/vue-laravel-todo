@@ -1,9 +1,40 @@
+<script>
+  export default {
+    name: 'TodoList',
+    data() {
+      return {
+        tasks: {
+          type: Array,
+          required: false,
+          value: [
+            'Tarea numero uno', 
+            'Tarea numero dos',
+            'Tarea numero tres']
+        },
+        listTitle: {
+          type: String,
+          required: true,
+          value: 'Lista de tareas'
+        }
+      }
+    },
+    methods: {
+      addItem () {
+
+      },
+      deleteAll () {
+        this.tasks.value.length = 0
+      }
+    }
+  }
+</script>
+
 <template>
   <div class="todolist">
     <div class="container">
       <div class="row">
         <div class="offset-md-3 col-md-6 pt-5 pb-5">
-          <h1 class="text-center">
+          <h1 class="task-heading text-center pt-3 pb-3 mb-3">
             {{listTitle.value}}
             <span>
               <font-awesome-icon icon="fa-solid fa-clipboard" />
@@ -12,21 +43,32 @@
 
           <div class="list-wrapper">
             <div class="btns-wrapper">
-              <button class="btn bg-danger" type="button">
+              <button
+              @click="deleteAll"
+              class="btn bg-danger"
+              type="button">
                 <span>
                   Borrar todo
                 </span>
                 <font-awesome-icon icon="fa-solid fa-trash" />
               </button>
 
-              <button class="btn bg-warning" type="button">
+              <button class="btn bg-warning" type="button">                
                 <span>
                   Borrar seleccionadas
                 </span>
                 <font-awesome-icon icon="fa-solid fa-trash" />
               </button>
             </div>
-            <ul class="list-unstyled todo-container">
+            <ul class="list-unstyled todo-container mt-3 mb-3">
+              <li v-if="tasks.value.length === 0">
+                <span class="text-danger">
+                  <font-awesome-icon icon="fa-solid fa-xmark" />
+                </span>
+                <span>
+                  No hay tareas en la lista
+                </span>
+              </li>
               <li 
               v-for="(task, index) in tasks.value"
               :key="index">
@@ -69,30 +111,15 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'TodoList',
-  data() {
-    return {
-      tasks: {
-        type: Array,
-        required: false,
-        value: [1, 2, 3]
-      },
-      listTitle: {
-        type: String,
-        required: true,
-        value: 'Lista de tareas'
-      }
-    }
-  }
-}
-</script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .todolist {
-    margin: 5rem 0;
+    margin: 3rem 0;
+  }
+
+  .task-heading {
+    background-color: #0097F4;
+    color: #fff;
   }
 
   .btns-wrapper,
@@ -100,6 +127,10 @@ export default {
     display:flex;
     flex-direction: row;
     justify-content: flex-end;
+
+    button {
+      margin-right: 0;
+    }
   }
 
   button {
