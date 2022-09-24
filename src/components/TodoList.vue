@@ -7,21 +7,24 @@ export default {
       tasks: {
         type: Array,
         required: false,
-        value: [
-          'Tarea numero uno', 
-          'Tarea numero dos',
-          'Tarea numero tres']
+        value: []
       },
       listTitle: {
         type: String,
         required: true,
         value: 'Lista de tareas'
+      },
+      newTask: {
+        type: String,
+        required: false,
+        value: null
       }
     }
   },
   methods: {
     addItem () {
-
+      this.tasks.value.push(this.newTask.value)
+      this.newTask.value = null
     },
     deleteAll () {
       this.tasks.value.length = 0
@@ -94,7 +97,7 @@ export default {
               :key="index">
                 <div class="form-check">
                   <input class="form-check-input" 
-                  type="checkbox" 
+                  type="checkbox"
                   :value="index" 
                   :id="`item-${index}`" />                  
                   <label class="form-check-label" :for="`item-${index}`">
@@ -104,12 +107,16 @@ export default {
               </li>
             </ul>
             <div class="input-group pt-3 pb-3">
-              <input type="text" 
+              <input 
+              v-model="newTask.value"
+              @keyup.enter="addItem"
+              type="text" 
               class="form-control" 
               placeholder="Agregua una tarea" 
               aria-label="Agregar tarea" 
               aria-describedby="button-add" />
-              <button 
+              <button
+              @click="addItem"
               class="btn btn-outline-secondary btn-primary" 
               type="button" 
               id="button-add">
@@ -150,6 +157,11 @@ export default {
 
     button {
       margin-right: 0;
+
+      &:hover {
+        color: #fff;
+        opacity: 0.7
+      }
     }
   }
 

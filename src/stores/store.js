@@ -7,10 +7,14 @@ export const store = defineStore({
   state: () => {
 
   },
-  actions: () => {
+  actions: {
     fetchList () {
       try {
         let res = api.get(URL.GET_API)
+        res
+        .then (res => {
+          console.log(res)
+        })
       } catch (error) {
         console.log(error)
       }
