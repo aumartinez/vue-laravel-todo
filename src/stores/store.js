@@ -10,8 +10,8 @@ export const store = defineStore({
   actions: {
     fetchList () {
       try {
-        let res = api.get(URL.GET_API)
-        res
+        let resp = api.get(URL.GET_API)
+        resp
         .then (res => {
           console.log(res)
         })
