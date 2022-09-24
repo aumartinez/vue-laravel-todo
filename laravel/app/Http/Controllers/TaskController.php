@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\ModelsTask;
+use App\Models\Task;
 
 class TaskController extends Controller
 {
@@ -15,13 +15,27 @@ class TaskController extends Controller
 
     public function store(Request $request) 
     {
-        return Task::create($request->all());
+        $validated = $request->validate([
+            'index' => 'required',
+            'name' => 'required',
+        ]);
+        
+        Task::create($request->all());
+        $mess = [
+            'status' => 'success',
+            'message' => 'Tarea agregada con exito'
+        ];
+        return response($mess);
     }
 
     public function delete(Request $request, $index)
     {
-        $task = Task::findOrFail($index);
-        $task->delete();
-        return 204;
+        $mess = [
+            'status' => 'success',
+            'message' => 'Tarea borrada'
+        ];
+
+        Task::where('index', $index)->delete();
+        return response($mess);
     }
 }
