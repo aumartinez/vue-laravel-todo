@@ -19,7 +19,13 @@ class TaskController extends Controller
             'index' => 'required',
             'name' => 'required',
         ]);
-        
+
+        $find = Task::where('index', request('index'))->first();
+
+        if ($find) {
+            return;
+        }
+                
         Task::create($request->all());
         $mess = [
             'status' => 'success',

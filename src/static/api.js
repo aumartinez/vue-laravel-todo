@@ -22,6 +22,17 @@ export const api = {
 
       return resp
     },
+    async delete(url) {
+      let resp = await axios
+                       .delete(url)
+                       .then(this.sleeper(500))
+                       .then(res => {
+                        console.log(res)
+                       })
+                       .catch(error => error)
+
+      return resp
+    },
     ajaxPost(url, formData) {
       let resp =  $.ajax({
                       url: url,

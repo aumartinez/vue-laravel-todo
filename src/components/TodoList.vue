@@ -17,6 +17,11 @@ export default {
         required: false,
         value: this.store.taskList
       },
+      removed: {
+        type: Array,
+        required: false,
+        value: []
+      },
       listTitle: {
         type: String,
         required: true,
@@ -34,27 +39,53 @@ export default {
       if (!this.newTask.value) {
         return
       }
-      this.tasks.value.push(this.newTask.value)
+
+      let o = {}
+      o.name = this.newTask.value
+      o.index = this.tasks.value.length
+
+      this.tasks.value.push(o)
       this.newTask.value = null
     },
     deleteAll () {
+      let removed = this.tasks.value.map(o => o.index)
+      this.removed.value = removed
       this.tasks.value.length = 0
     },
-    deleteSelected() {
+    deleteSelected () {
       let selected = document.querySelectorAll('input:checked')
       let remove = []
+      let o = {}
 
-      selected.forEach(e => {
+      selected.forEach(e => {        
         let i = e.value
         e.checked = false
-        remove.push(Number(i))        
+        remove.push(Number(i))
+        this.removed.value.push(o.index = (i))
       })
 
-      let temp = this.tasks.value.filter((val, index) => {
-        return !remove.includes(index)
+      let temp = this.tasks.value.filter( o => {
+        return !remove.includes(o.index)
       })
       
-      this.tasks.value = temp      
+      this.tasks.value = temp
+    },
+    saveTasks () {
+      let task = {}
+
+      if (this.tasks.value.length === 0) {
+        this.store.deleteAll()
+      }
+
+      this.tasks.value.forEach(o => {        
+        this.store.saveTask(o)
+      })
+
+      this.removed.value.forEach(o => {
+        this.store.deleteTask(o)
+      })
+
+      console.log(task)
     }
   }
 }
@@ -104,15 +135,15 @@ export default {
                 </span>
               </li>
               <li 
-              v-for="(task, index) in tasks.value"
-              :key="index">
+              v-for="task in tasks.value"
+              :key="task.index">
                 <div class="form-check">
                   <input class="form-check-input" 
                   type="checkbox"
-                  :value="index" 
-                  :id="`item-${index}`" />                  
-                  <label class="form-check-label" :for="`item-${index}`">
-                    {{task}}
+                  :value="task.index" 
+                  :id="`item-${task.index}`" />                  
+                  <label class="form-check-label" :for="`item-${task.index}`">
+                    {{task.name}}
                   </label>
                 </div>
               </li>
@@ -135,7 +166,10 @@ export default {
               </button>
             </div>
             <div class="list-bottom">
-              <button class="btn bg-success" type="button">
+              <button
+              @click="saveTasks"
+              class="btn bg-success" 
+              type="button">
                 <span>
                   Guardar
                 </span>
