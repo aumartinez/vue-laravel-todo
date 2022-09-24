@@ -139,7 +139,7 @@ export default {
 </template>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped lang="scss">
   .todolist {
     margin: 3rem 0;
   }
@@ -149,24 +149,27 @@ export default {
     color: #fff;
   }
 
+  .todo-container {
+    li {
+      margin-bottom: 1rem;
+      font-size: 18px;
+    }
+  }
+
   .btns-wrapper,
   .list-bottom {
     display:flex;
     flex-direction: row;
     justify-content: flex-end;
-
-    button {
-      margin-right: 0;
-
-      &:hover {
-        color: #fff;
-        opacity: 0.7
-      }
-    }
   }
 
   button {
     color: #fff;
     margin-right: 1rem;
+
+    &:hover {
+      color: #fff !important;
+      opacity: 0.7
+    }
   }
 </style>
