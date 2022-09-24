@@ -1,32 +1,49 @@
 <script>
-  export default {
-    name: 'TodoList',
-    data() {
-      return {
-        tasks: {
-          type: Array,
-          required: false,
-          value: [
-            'Tarea numero uno', 
-            'Tarea numero dos',
-            'Tarea numero tres']
-        },
-        listTitle: {
-          type: String,
-          required: true,
-          value: 'Lista de tareas'
-        }
-      }
-    },
-    methods: {
-      addItem () {
 
+export default {
+  name: 'TodoList',
+  data() {
+    return {
+      tasks: {
+        type: Array,
+        required: false,
+        value: [
+          'Tarea numero uno', 
+          'Tarea numero dos',
+          'Tarea numero tres']
       },
-      deleteAll () {
-        this.tasks.value.length = 0
+      listTitle: {
+        type: String,
+        required: true,
+        value: 'Lista de tareas'
       }
     }
+  },
+  methods: {
+    addItem () {
+
+    },
+    deleteAll () {
+      this.tasks.value.length = 0
+    },
+    deleteSelected() {
+      let selected = document.querySelectorAll('input:checked')
+      let remove = []
+
+      selected.forEach(e => {
+        let i = e.value
+        e.checked = false
+        remove.push(Number(i))        
+      })
+
+      let temp = this.tasks.value.filter((val, index) => {
+        return !remove.includes(index)
+      })
+      
+      this.tasks.value = temp      
+    }
   }
+}
 </script>
 
 <template>
@@ -53,7 +70,10 @@
                 <font-awesome-icon icon="fa-solid fa-trash" />
               </button>
 
-              <button class="btn bg-warning" type="button">                
+              <button 
+              @click="deleteSelected"
+              class="btn bg-warning" 
+              type="button">                
                 <span>
                   Borrar seleccionadas
                 </span>
@@ -75,7 +95,7 @@
                 <div class="form-check">
                   <input class="form-check-input" 
                   type="checkbox" 
-                  value="" 
+                  :value="index" 
                   :id="`item-${index}`" />                  
                   <label class="form-check-label" :for="`item-${index}`">
                     {{task}}
