@@ -5,9 +5,7 @@ import { api } from '@/static/api.js'
 export const VueStore = defineStore({
   id: 'VueStore',
   state: () => ({
-    loaded: false,
     taskList: [],
-    message: ''
   }),
   actions: {
     fetchList () {
@@ -26,28 +24,17 @@ export const VueStore = defineStore({
     },
     saveTask (data) {
       try {
-        let resp = api.post(URL.POST_API, data)
-        resp
-        .then (res => {
-          console.log(res)
-        })
+        api.post(URL.POST_API, data)
       } catch (error) {
         console.log(error)
       }
     },
     deleteTask(index) {
       try {
-        let resp = api.delete(URL.DEL_API + index)
-        resp
-        .then (res => {
-          console.log(res)
-        })
+        api.delete(URL.DEL_API + index)
       } catch (error) {
         console.log(error)
       }
-    },
-    deleteAll () {
-
     }
   }
 })

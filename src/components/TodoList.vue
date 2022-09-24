@@ -6,6 +6,7 @@ export default {
   setup() {
     const store = VueStore()
     store.fetchList()
+    
     return {
       store
     }    
@@ -28,6 +29,11 @@ export default {
         value: 'Lista de tareas'
       },
       newTask: {
+        type: String,
+        required: false,
+        value: null
+      },
+      success: {
         type: String,
         required: false,
         value: null
@@ -71,12 +77,6 @@ export default {
       this.tasks.value = temp
     },
     saveTasks () {
-      let task = {}
-
-      if (this.tasks.value.length === 0) {
-        this.store.deleteAll()
-      }
-
       this.tasks.value.forEach(o => {        
         this.store.saveTask(o)
       })
@@ -85,7 +85,7 @@ export default {
         this.store.deleteTask(o)
       })
 
-      console.log(task)
+      this.success.value = 'Tarea guardada'
     }
   }
 }
@@ -104,6 +104,11 @@ export default {
           </h1>
 
           <div class="list-wrapper">
+            <div 
+            v-if="success.value"
+            class="alert alert-success text-center">
+              {{success.value}}
+            </div>
             <div class="btns-wrapper">
               <button
               @click="deleteAll"
