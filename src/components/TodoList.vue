@@ -1,5 +1,4 @@
 <script>
-
 export default {
   name: 'TodoList',
   data() {
@@ -23,6 +22,9 @@ export default {
   },
   methods: {
     addItem () {
+      if (!this.newTask.value) {
+        return
+      }
       this.tasks.value.push(this.newTask.value)
       this.newTask.value = null
     },
