@@ -1,5 +1,5 @@
-const BASE_URL = 'http://localhost:8080/laravel/'
+const BASE_URL = 'http://localhost:8000/api'
 
 export const URL = {
-  GET_API: BASE_URL + ''
+  GET_API: BASE_URL + '/task',
 }

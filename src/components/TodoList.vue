@@ -1,12 +1,21 @@
 <script>
+import { VueStore } from '@/stores/store.js'
+
 export default {
   name: 'TodoList',
+  setup() {
+    const store = VueStore()
+    store.fetchList()
+    return {
+      store
+    }    
+  },
   data() {
     return {
       tasks: {
         type: Array,
         required: false,
-        value: []
+        value: this.store.taskList
       },
       listTitle: {
         type: String,
