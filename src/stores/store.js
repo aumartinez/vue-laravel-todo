@@ -5,7 +5,11 @@ import { api } from '@/static/api.js'
 export const VueStore = defineStore({
   id: 'VueStore',
   state: () => ({
-    taskList: [],
+    loaded: false,
+    tasks: [],
+    removed: [],
+    newTask: '',
+    success: false
   }),
   actions: {
     fetchList () {
@@ -15,8 +19,9 @@ export const VueStore = defineStore({
         .then (res => {
           let arr = res.sort((a, b) => a.index - b.index)
           arr.forEach(e => {
-            this.taskList.push(e)
+            this.tasks.push(e)
           })
+          this.loaded = true
         })
       } catch (error) {
         console.log(error)
@@ -25,6 +30,7 @@ export const VueStore = defineStore({
     saveTask (data) {
       try {
         api.post(URL.POST_API, data)
+        this.success = true
       } catch (error) {
         console.log(error)
       }

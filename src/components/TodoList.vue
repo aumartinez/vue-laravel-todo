@@ -1,95 +1,64 @@
-<script>
+<script setup>
+import { onMounted } from 'vue';
 import { VueStore } from '@/stores/store.js'
 
-export default {
-  name: 'TodoList',
-  setup() {
-    const store = VueStore()
-    store.fetchList()
-    
-    return {
-      store
-    }    
-  },
-  data() {
-    return {
-      tasks: {
-        type: Array,
-        required: false,
-        value: this.store.taskList
-      },
-      removed: {
-        type: Array,
-        required: false,
-        value: []
-      },
-      listTitle: {
-        type: String,
-        required: true,
-        value: 'Lista de tareas'
-      },
-      newTask: {
-        type: String,
-        required: false,
-        value: null
-      },
-      success: {
-        type: String,
-        required: false,
-        value: null
-      }
-    }
-  },
-  methods: {
-    addItem () {
-      if (!this.newTask.value) {
-        return
-      }
+const store = VueStore()
 
-      let o = {}
-      o.name = this.newTask.value
-      o.index = this.tasks.value.length
-
-      this.tasks.value.push(o)
-      this.newTask.value = null
-    },
-    deleteAll () {
-      let removed = this.tasks.value.map(o => o.index)
-      this.removed.value = removed
-      this.tasks.value.length = 0
-    },
-    deleteSelected () {
-      let selected = document.querySelectorAll('input:checked')
-      let remove = []
-      let o = {}
-
-      selected.forEach(e => {        
-        let i = e.value
-        e.checked = false
-        remove.push(Number(i))
-        this.removed.value.push(o.index = (i))
-      })
-
-      let temp = this.tasks.value.filter( o => {
-        return !remove.includes(o.index)
-      })
-      
-      this.tasks.value = temp
-    },
-    saveTasks () {
-      this.tasks.value.forEach(o => {        
-        this.store.saveTask(o)
-      })
-
-      this.removed.value.forEach(o => {
-        this.store.deleteTask(o)
-      })
-
-      this.success.value = 'Tarea guardada'
-    }
-  }
+function deleteAll () {
+  let removed = store.tasks.map(o => o.index)
+  store.removed = removed
+  store.tasks.length = 0
 }
+
+function addItem() {
+  if (!store.newTask) {
+    return
+  }
+
+  let o = {}
+  o.name = store.newTask
+  o.index = store.tasks.length
+
+  store.tasks.push(o)
+  store.newTask = null
+}
+
+function deleteSelected () {
+  let selected = document.querySelectorAll('input:checked')
+  let remove = []
+  let o = {}
+
+  selected.forEach(e => {        
+    let i = e.value
+    e.checked = false
+    remove.push(Number(i))
+    store.removed.push(o.index = (i))
+  })
+
+  let temp = store.tasks.filter( o => {
+    return !remove.includes(o.index)
+  })
+  
+  store.tasks = temp
+}
+
+function saveTasks () {
+  store.tasks.forEach(o => {        
+    store.saveTask(o)
+  })
+
+  store.removed.forEach(o => {
+    store.deleteTask(o)
+  })
+
+  this.success = 'Tarea guardada'
+}
+
+onMounted(() => {
+  store.fetchList()
+})
 </script>
+
 
 <template>
   <div class="todolist">
@@ -97,7 +66,7 @@ export default {
       <div class="row">
         <div class="offset-md-3 col-md-6 pt-5 pb-5">
           <h1 class="task-heading text-center pt-3 pb-3 mb-3">
-            {{listTitle.value}}
+            Lista de tareas
             <span>
               <font-awesome-icon icon="fa-solid fa-clipboard" />
             </span>
@@ -105,13 +74,13 @@ export default {
 
           <div class="list-wrapper">
             <div 
-            v-if="success.value"
+            v-if="store.success"
             class="alert alert-success text-center">
-              {{success.value}}
+              Tarea guardada
             </div>
             <div class="btns-wrapper">
               <button
-              @click="deleteAll"
+              @click="deleteAll()"
               class="btn bg-danger"
               type="button">
                 <span>
@@ -121,7 +90,7 @@ export default {
               </button>
 
               <button 
-              @click="deleteSelected"
+              @click="deleteSelected()"
               class="btn bg-warning" 
               type="button">                
                 <span>
@@ -131,7 +100,12 @@ export default {
               </button>
             </div>
             <ul class="list-unstyled todo-container mt-3 mb-3">
-              <li v-if="tasks.value.length === 0">
+              <li v-if="!store.loaded">
+                <span>
+                  Cargando tareas de la API ...
+                </span>
+              </li>
+              <li v-if="store.tasks.length === 0 && store.loaded">
                 <span class="text-danger">
                   <font-awesome-icon icon="fa-solid fa-xmark" />
                 </span>
@@ -140,7 +114,7 @@ export default {
                 </span>
               </li>
               <li 
-              v-for="task in tasks.value"
+              v-for="task in store.tasks"
               :key="task.index">
                 <div class="form-check">
                   <input class="form-check-input" 
@@ -155,7 +129,7 @@ export default {
             </ul>
             <div class="input-group pt-3 pb-3">
               <input 
-              v-model="newTask.value"
+              v-model="store.newTask"
               @keyup.enter="addItem"
               type="text" 
               class="form-control" 
@@ -163,7 +137,7 @@ export default {
               aria-label="Agregar tarea" 
               aria-describedby="button-add" />
               <button
-              @click="addItem"
+              @click="addItem()"
               class="btn btn-outline-secondary btn-primary" 
               type="button" 
               id="button-add">
@@ -172,7 +146,7 @@ export default {
             </div>
             <div class="list-bottom">
               <button
-              @click="saveTasks"
+              @click="saveTasks()"
               class="btn bg-success" 
               type="button">
                 <span>
