@@ -35,4 +35,4 @@ To run the project locally:
 
 3- Run php artisan serve command in CLI
 
-4- Open the local server, usuarlly on localhost:8000
+4- Open the local server, usually on localhost:8000
