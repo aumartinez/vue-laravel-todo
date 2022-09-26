@@ -28,7 +28,11 @@ Heroku URL: https://vue-laravel-list.herokuapp.com
 
 ### Run project locally
 To run the project locally:
+
 1- Download/Clone project
+
 2- Navigate to Laravel folder
+
 3- Run php artisan serve command in CLI
+
 4- Open the local server, usuarlly on localhost:8000
