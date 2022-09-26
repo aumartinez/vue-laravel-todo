@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8000/api'
+const BASE_URL = 'http://vue-laravel-list.herokuapp.com/api'
 
 export const URL = {
   GET_API: BASE_URL + '/task',
