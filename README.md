@@ -22,3 +22,6 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### Added project to Heroku
+Heroku URL: https://vue-laravel-list.herokuapp.com 
